@@ -8,7 +8,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import { connect } from "react-redux";
 import { setAddData } from "./../../redux/actions/contactActions";
-
+import axios from "axios";
 
 class ModalView extends React.Component {
   constructor(props) {
@@ -30,16 +30,35 @@ class ModalView extends React.Component {
 
   
   handleSave() {
-    const id= new Date().getUTCMilliseconds();
-    let data = {
-      id:id && id,
-      assigneeName: this.state.assigneeName,
-      photo: this.state.photo,
-      date: this.state.date,
-      time: this.state.time,
-      description: this.state.description
-    };
-    this.props.setAddData(data);
+const token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg0MjYyNTEsIm5iZiI6MTU4ODQyNjI1MSwianRpIjoiY2M4ODYxMDEtOWY3OC00NzNjLTgwODctOTRkMGQwNGNmOTkyIiwiaWRlbnRpdHkiOnsibmFtZSI6IlNhcmF2YW5hbiBUZXN0aW5nIiwiZW1haWwiOiJzcGljZWJsdWV0ZXN0MkBnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNWU3ODgwZGE3ZWEyZjA5ZTgwM2U4NmY1IiwiaWNvbiI6IiJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.wcBIUDWWx4YcPEzjwykqMwv-kl-lop4v9nvPDJk-ArM';
+//  const body= {
+//       assigned_user:"5e7880dd7ea2f09e803e86fa",
+//       task_date:this.state.date,
+//       task_time:this.state.time,
+//       task_msg: this.state.description
+//     };
+
+
+    axios.post('https://stageapi.hellomail.io/task/5e7880dd7ea2f09e803e86fa',{
+   assigned_user:"5e7880dd7ea2f09e803e86fa",
+   task_date:"this.state.date",
+   task_time:"this.state.time",
+   task_msg: "this.state.description"
+   }, {
+    headers:{
+      'Authorization':`Bearer ${token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(res => {
+      console.log(res.data,'222');
+    })
+    .catch(err => {
+      console.log(err,'222');
+    });
+
+    // this.props.setAddData(data);
     this.handleClose();
   }
 
@@ -53,17 +72,7 @@ class ModalView extends React.Component {
             <Modal.Title>Create Task</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Assignee Name"
-              type="string"
-              fullWidth
-              onChange={e => {
-                this.setState({ assigneeName: e.target.value });
-              }}
-            />
+           
             
              <TextField
              className="mt-2"

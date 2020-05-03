@@ -10,7 +10,7 @@ import Modal from "./../modal";
 import { deleteData } from "./../../redux/actions/contactActions";
 import ModalUpdateView from "./../updateModal";
 import { connect } from "react-redux";
-
+import axios from 'axios';
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
@@ -37,6 +37,7 @@ class Contact extends React.Component {
       updateData: {},
       searchField: "",
       reader:null,
+      data:[]
     };
     this.handleModal = this.handleModal.bind(this);
     this.handleUpdatedData = this.handleUpdatedData.bind(this);
@@ -45,6 +46,21 @@ class Contact extends React.Component {
     this.handleReader = this.handleReader.bind(this);
   }
 
+  componentDidMount(){
+    const token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg0MjYyNTEsIm5iZiI6MTU4ODQyNjI1MSwianRpIjoiY2M4ODYxMDEtOWY3OC00NzNjLTgwODctOTRkMGQwNGNmOTkyIiwiaWRlbnRpdHkiOnsibmFtZSI6IlNhcmF2YW5hbiBUZXN0aW5nIiwiZW1haWwiOiJzcGljZWJsdWV0ZXN0MkBnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNWU3ODgwZGE3ZWEyZjA5ZTgwM2U4NmY1IiwiaWNvbiI6IiJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.wcBIUDWWx4YcPEzjwykqMwv-kl-lop4v9nvPDJk-ArM';
+    
+    axios.get(`https://stageapi.hellomail.io/task/5e7880dd7ea2f09e803e86fa`,{
+      headers:{
+        "Authorization" :`Bearer ${token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      console.log(res.data,'222');
+      this.setState({data:res.data.results});
+    })
+  }
   handleModal() {
     this.setState({ open: !this.state.open });
   }
@@ -57,6 +73,7 @@ class Contact extends React.Component {
     this.setState({ viewObj: obj });
   }
   handleEditModal(data) {
+    console.log("kakkakkakk", data)
     this.setState({ updateShow: true, updateData: data });
   }
 
@@ -65,8 +82,19 @@ class Contact extends React.Component {
   }
 
   handleDelete(id) {
-    this.props.deleteData(id);
-    this.setState({ viewObj: {} });
+    const token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg0MTE4NDUsIm5iZiI6MTU4ODQxMTg0NSwianRpIjoiNjBhZjk4ZGMtNjA3Ny00MTM3LWExY2UtYWZmMjJlZTliNGQ0IiwiaWRlbnRpdHkiOnsibmFtZSI6IlNhcmF2YW5hbiBUZXN0aW5nIiwiZW1haWwiOiJzcGljZWJsdWV0ZXN0MkBnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNWU3ODgwZGE3ZWEyZjA5ZTgwM2U4NmY1IiwiaWNvbiI6IiJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.ljF09welDL4yLUKEt9kR-b3LpdFFndOJRD-BEUzhy8s';
+
+    axios.delete(`https://stageapi.hellomail.io/task/5e7880dd7ea2f09e803e86fa/${id}`,{ headers:{
+      "Authorization" :`Bearer ${token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }})
+    .then(res => {
+      window.location.reload();
+      console.log(res,'suces')
+    })
+    // this.props.deleteData(id);
+    // this.setState({ viewObj: {} });
   }
   handleUpdatedData(data) {
     this.setState({ viewObj: data });
@@ -76,9 +104,9 @@ class Contact extends React.Component {
   }
 
   render() {
-    const filteredData = this.props.contactListData.filter(el =>
-      el.assigneeName.includes(this.state.searchField)
-    );
+    // const filteredData = this.props.contactListData.filter(el =>
+    //   el.assigneeName.includes(this.state.searchField)
+    // );
     const classes = <useStyles />;
     return (
       <div>
@@ -121,10 +149,10 @@ class Contact extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredData &&
-                      filteredData.map(el => (
+                    {this.state.data &&
+                      this.state.data.map(el => (
                         <tr>
-                          <td>{el.id}</td>
+                          
                           <td>
                             <div className="d-flex justify-content-start">
                               <Avatar
@@ -132,7 +160,8 @@ class Contact extends React.Component {
                                 src={localStorage.getItem(el.id)}
                                 className={classes.small}
                               />
-                              <span>{el.assigneeName}</span>{" "}
+                              <span>{el.assigned_user}</span>{" "}
+                      <div>{el.task_msg}</div> <span>{el.task_time}</span>
                             </div>
                           </td>
                           <td>
@@ -152,14 +181,20 @@ class Contact extends React.Component {
                                   View
                                 </Button>
                               </span>
-                              <span className="ml-4">
+                              <span className="ml-1">
                                 {" "}
                                 <Button
+                                variant="outline-danger"
+                                onClick={this.handleDelete.bind(this, el.id)}
+                              >
+                             delete
+                              </Button>
+                                {/* <Button
                                   onClick={this.handleDelete.bind(this, el.id)}
                                   variant="outline-danger"
                                 >
                                   Delete
-                                </Button>
+                                </Button> */}
                               </span>
                             </div>
                           </td>
@@ -172,7 +207,7 @@ class Contact extends React.Component {
 
             <Col>
               <div className="mt-5">
-                <Card className={classes.root}>
+                {/* <Card className={classes.root}>
                   <CardContent>
                     <div>
 
@@ -201,7 +236,7 @@ class Contact extends React.Component {
                     </div>
                   </CardContent>
                   <CardActions></CardActions>
-                </Card>
+                </Card> */}
               </div>
             </Col>
           </Row>
