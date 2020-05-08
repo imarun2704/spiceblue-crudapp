@@ -1,38 +1,45 @@
 import { addDataActionType } from './../actionTypes/contactTypes';
 
 const INITIAL_STATE = {
-           contactListData:[],
+           listData:[],
 }
 
 const contactReducer = (state = INITIAL_STATE, action) =>{
-    console.log(action.payload,'1111111red')
+   
     switch(action.type) {
        case addDataActionType.ADD_DATA:
            { 
              return {
                  ...state,
-                 contactListData: [...state.contactListData,action.payload]
+                 listData: action.payload,
              }
           }
-          case addDataActionType.UPDATE_DATA:
+          case addDataActionType.CREATE_DATA:
             { 
-                const index = state.contactListData.findIndex(el => el.id === action.payload.id );
               return {
                   ...state,
-                  contactListData:state.contactListData.map((content, i) => 
+                  listData: [...state.listData,action.payload]
+              }
+           }
+          case addDataActionType.UPDATE_DATA:
+            { 
+                const index = state.listData.findIndex(el => el.id === action.payload.id );
+              return {
+                  ...state,
+                  listData:state.listData.map((content, i) => 
                    i === index ? { ...content, ...action.payload } : content
                   )
               }
            }
 
            case addDataActionType.DELETE_DATA:
-               {console.log('delete reducers ', action.payload)
-                const newstate = state.contactListData.filter(
+               {
+                const newstate = state.listData.filter(
                     el => el.id !== action.payload
                   );
                    return {
                        ...state,
-                        contactListData:newstate
+                      listData:newstate
                    }
                }
        default:   

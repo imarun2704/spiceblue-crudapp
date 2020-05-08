@@ -6,6 +6,12 @@ export const setAddData = (payload) => ({
     payload: payload
 
 });
+export const createData = (payload) => ({
+ 
+    type: addDataActionType.CREATE_DATA,
+    payload: payload
+
+});
 export const updateData = (payload) => ({
  
     type: addDataActionType.UPDATE_DATA,

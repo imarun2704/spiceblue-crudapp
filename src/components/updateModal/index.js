@@ -14,49 +14,39 @@ class ModalUpdateView extends React.Component {
         super(props);
         this.state={
             open: false,
-            assigneeName:null,
+            assigneeName:'',
             photo:null,
-            date:null,
-            time:null,
-            description:null
+            date:'',
+            time:'',
+            description:''
         };
     }
     handleClose(){
         this.props.close();
     }
     handleSave(id){
-      console.log('is coming',id)
-      const token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg0MTE4NDUsIm5iZiI6MTU4ODQxMTg0NSwianRpIjoiNjBhZjk4ZGMtNjA3Ny00MTM3LWExY2UtYWZmMjJlZTliNGQ0IiwiaWRlbnRpdHkiOnsibmFtZSI6IlNhcmF2YW5hbiBUZXN0aW5nIiwiZW1haWwiOiJzcGljZWJsdWV0ZXN0MkBnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNWU3ODgwZGE3ZWEyZjA5ZTgwM2U4NmY1IiwiaWNvbiI6IiJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.ljF09welDL4yLUKEt9kR-b3LpdFFndOJRD-BEUzhy8s';
+      const token ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg5NDYxMzUsIm5iZiI6MTU4ODk0NjEzNSwianRpIjoiNzYzODQwNDItN2Q4NS00OWZhLWJlOWEtMjUzZDZhOTVkN2Y5IiwiaWRlbnRpdHkiOnsibmFtZSI6IlN1YmkgUCIsImVtYWlsIjoic3ViaUBzdWJpLmxsIiwidXNlcl9pZCI6IjVlYjNjMzkwZDY5ZGFiMjgyMmQxNjU3OCIsImNvbXBhbnlfaWQiOiI1ZWIzYzM5MGQ2OWRhYjI4MjJkMTY1NzciLCJpY29uIjoiaHR0cHM6Ly93d3cuZ3JhdmF0YXIuY29tL2F2YXRhci9jNjY0MWU4Y2ZkYzQ2NzU0MDg1NGI0ZDAyOWZhYTJhYSJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.4TeJPYqxecbuAO8VXN_fF1gfbiTVVl3QtyZODz_8Ifk";
 
-      axios.put(`https://stageapi.hellomail.io/task/5e7880dd7ea2f09e803e86fa/${id}`,{
-        body:{
-          assigned_user:"5e7880dd7ea2f09e803e86fa",
-          task_date:`${this.props.data.task_date}`,
-          task_time:`${this.props.data.task_time}`,
-          task_msg:`${this.props.data.task_msg}`
-        },
-      },{
+      axios.put(`https://stageapi.hellomail.io/task/5eb3c394d69dab2822d1657d/${id}`,{
        
+          assigned_user:"5eb3c394d69dab2822d1657d",
+          task_date:`${this.state.date}`,
+          task_time:`${this.state.time}`,
+          task_msg:`${this.state.description}`
+       
+      },{
       headers:{
         "Authorization" :`Bearer ${token}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }})
-      .then(res => {
-        // window.location.reload();
-        console.log(res.data,'suces')
+      }
+    })
+      .then(res => { 
+       const data = res.data.results;
+       this.props.updateData(data)
+      this.handleClose();
       })
 
-      //  let data = {
-      //   id: this.props.data.id,
-      //   assigneeName: this.state.assigneeName === null ? this.props.data.assigneeName : this.state.assigneeName ,
-      //   date: this.state.date === null ? this.props.data.date : this.state.date,
-      //   time: this.state.time === null ? this.props.data.time : this.state.time,
-      //   description: this.state.description === null ? this.props.data.description : this.state.description,
-      // };
-      // this.props.updateData(data);
-      // this.props.parentData(data);
-      // this.handleClose();
     }
 
     uploadImage = (element) => {
@@ -69,9 +59,7 @@ class ModalUpdateView extends React.Component {
       reader.readAsDataURL(file);
     };
     render(){
-
         const {show, data} = this.props;
-        console.log(data,'22up')
         return (
      <div>
       <Modal show={show} >
@@ -87,7 +75,7 @@ class ModalUpdateView extends React.Component {
               label="date"
               type="date"
               fullWidth
-              defaultValue={data.task_date}
+              defaultValue={data.task_date_string}
               onChange={e => {
                 this.setState({ date: e.target.value });
               }}

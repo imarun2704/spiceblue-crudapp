@@ -3,11 +3,8 @@ import FormControl from "react-bootstrap/FormControl";
 import { Container, Row, Col, Button, Table } from "react-bootstrap";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
 import Modal from "./../modal";
-import { deleteData } from "./../../redux/actions/contactActions";
+import { deleteData, setAddData } from "./../../redux/actions/contactActions";
 import ModalUpdateView from "./../updateModal";
 import { connect } from "react-redux";
 import axios from 'axios';
@@ -47,9 +44,9 @@ class Contact extends React.Component {
   }
 
   componentDidMount(){
-    const token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg0MjYyNTEsIm5iZiI6MTU4ODQyNjI1MSwianRpIjoiY2M4ODYxMDEtOWY3OC00NzNjLTgwODctOTRkMGQwNGNmOTkyIiwiaWRlbnRpdHkiOnsibmFtZSI6IlNhcmF2YW5hbiBUZXN0aW5nIiwiZW1haWwiOiJzcGljZWJsdWV0ZXN0MkBnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNWU3ODgwZGE3ZWEyZjA5ZTgwM2U4NmY1IiwiaWNvbiI6IiJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.wcBIUDWWx4YcPEzjwykqMwv-kl-lop4v9nvPDJk-ArM';
-    
-    axios.get(`https://stageapi.hellomail.io/task/5e7880dd7ea2f09e803e86fa`,{
+    const token ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg5NDYxMzUsIm5iZiI6MTU4ODk0NjEzNSwianRpIjoiNzYzODQwNDItN2Q4NS00OWZhLWJlOWEtMjUzZDZhOTVkN2Y5IiwiaWRlbnRpdHkiOnsibmFtZSI6IlN1YmkgUCIsImVtYWlsIjoic3ViaUBzdWJpLmxsIiwidXNlcl9pZCI6IjVlYjNjMzkwZDY5ZGFiMjgyMmQxNjU3OCIsImNvbXBhbnlfaWQiOiI1ZWIzYzM5MGQ2OWRhYjI4MjJkMTY1NzciLCJpY29uIjoiaHR0cHM6Ly93d3cuZ3JhdmF0YXIuY29tL2F2YXRhci9jNjY0MWU4Y2ZkYzQ2NzU0MDg1NGI0ZDAyOWZhYTJhYSJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.4TeJPYqxecbuAO8VXN_fF1gfbiTVVl3QtyZODz_8Ifk";
+
+    axios.get(`https://stageapi.hellomail.io/task/5eb3c394d69dab2822d1657d`,{
       headers:{
         "Authorization" :`Bearer ${token}`,
         'Accept': 'application/json',
@@ -59,6 +56,8 @@ class Contact extends React.Component {
     .then(res => {
       console.log(res.data,'222');
       this.setState({data:res.data.results});
+      const data = res.data.results;
+      this.props.setAddData(data);
     })
   }
   handleModal() {
@@ -82,16 +81,17 @@ class Contact extends React.Component {
   }
 
   handleDelete(id) {
-    const token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg0MTE4NDUsIm5iZiI6MTU4ODQxMTg0NSwianRpIjoiNjBhZjk4ZGMtNjA3Ny00MTM3LWExY2UtYWZmMjJlZTliNGQ0IiwiaWRlbnRpdHkiOnsibmFtZSI6IlNhcmF2YW5hbiBUZXN0aW5nIiwiZW1haWwiOiJzcGljZWJsdWV0ZXN0MkBnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNWU3ODgwZGE3ZWEyZjA5ZTgwM2U4NmY1IiwiaWNvbiI6IiJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.ljF09welDL4yLUKEt9kR-b3LpdFFndOJRD-BEUzhy8s';
+    const token ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg5NDYxMzUsIm5iZiI6MTU4ODk0NjEzNSwianRpIjoiNzYzODQwNDItN2Q4NS00OWZhLWJlOWEtMjUzZDZhOTVkN2Y5IiwiaWRlbnRpdHkiOnsibmFtZSI6IlN1YmkgUCIsImVtYWlsIjoic3ViaUBzdWJpLmxsIiwidXNlcl9pZCI6IjVlYjNjMzkwZDY5ZGFiMjgyMmQxNjU3OCIsImNvbXBhbnlfaWQiOiI1ZWIzYzM5MGQ2OWRhYjI4MjJkMTY1NzciLCJpY29uIjoiaHR0cHM6Ly93d3cuZ3JhdmF0YXIuY29tL2F2YXRhci9jNjY0MWU4Y2ZkYzQ2NzU0MDg1NGI0ZDAyOWZhYTJhYSJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.4TeJPYqxecbuAO8VXN_fF1gfbiTVVl3QtyZODz_8Ifk";
 
-    axios.delete(`https://stageapi.hellomail.io/task/5e7880dd7ea2f09e803e86fa/${id}`,{ headers:{
+    axios.delete(`https://stageapi.hellomail.io/task/5eb3c394d69dab2822d1657d/${id}`,{ headers:{
       "Authorization" :`Bearer ${token}`,
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     }})
     .then(res => {
-      window.location.reload();
-      console.log(res,'suces')
+      console.log(res.data,'suces');
+   
+      this.props.deleteData(id);
     })
     // this.props.deleteData(id);
     // this.setState({ viewObj: {} });
@@ -104,9 +104,9 @@ class Contact extends React.Component {
   }
 
   render() {
-    // const filteredData = this.props.contactListData.filter(el =>
-    //   el.assigneeName.includes(this.state.searchField)
-    // );
+    console.log(this.props.listData,'111');
+      const listData = this.props.listData;
+ 
     const classes = <useStyles />;
     return (
       <div>
@@ -149,15 +149,14 @@ class Contact extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.data &&
-                      this.state.data.map(el => (
-                        <tr>
+                    {listData &&
+                     listData.map(el => (
+                        <tr key={el.id}>
                           
                           <td>
                             <div className="d-flex justify-content-start">
                               <Avatar
                                 alt="Remy Sharp"
-                                src={localStorage.getItem(el.id)}
                                 className={classes.small}
                               />
                               <span>{el.assigned_user}</span>{" "}
@@ -189,12 +188,7 @@ class Contact extends React.Component {
                               >
                              delete
                               </Button>
-                                {/* <Button
-                                  onClick={this.handleDelete.bind(this, el.id)}
-                                  variant="outline-danger"
-                                >
-                                  Delete
-                                </Button> */}
+                               
                               </span>
                             </div>
                           </td>
@@ -206,38 +200,7 @@ class Contact extends React.Component {
             </Col>
 
             <Col>
-              <div className="mt-5">
-                {/* <Card className={classes.root}>
-                  <CardContent>
-                    <div>
-
-                    <h5>View Task Information</h5>
-                      <div className="w-25 h-25">
-                       <Avatar   
-                        alt="profile photo"
-                        src={this.state.viewObj && localStorage.getItem(this.state.viewObj.id)}
-                        className={classes.large}
-                      />
-                      </div>        
-                     
-                        <div className=" mt-3">
-                         <h6>Assignee Name : {this.state.viewObj && this.state.viewObj.assigneeName}</h6> 
-                         </div>
-                         <div className=" mt-3">
-                         <h6>Date : {this.state.viewObj && this.state.viewObj.date}</h6> 
-                         </div>
-                         <div className=" mt-3">
-                         <h6>Time : {this.state.viewObj && this.state.viewObj.time}</h6> 
-                         </div>                      
-                         <div className=" mt-3">
-                         <h6>Description : {this.state.viewObj && this.state.viewObj.description}</h6> 
-                         </div>
-                      
-                    </div>
-                  </CardContent>
-                  <CardActions></CardActions>
-                </Card> */}
-              </div>
+              
             </Col>
           </Row>
         </Container>
@@ -247,10 +210,11 @@ class Contact extends React.Component {
 }
 
 const mapStateToProps = ({ contactReducer }) => ({
-  contactListData: contactReducer.contactListData
+  listData: contactReducer.listData
 });
 const mapDispatchToProps = dispatch => ({
-  deleteData: id => dispatch(deleteData(id))
+  deleteData: id => dispatch(deleteData(id)),
+  setAddData: (data) => dispatch(setAddData(data))
 });
 
 export default connect(

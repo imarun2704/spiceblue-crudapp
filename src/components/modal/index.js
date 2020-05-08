@@ -7,7 +7,7 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import { connect } from "react-redux";
-import { setAddData } from "./../../redux/actions/contactActions";
+import { createData } from "./../../redux/actions/contactActions";
 import axios from "axios";
 
 class ModalView extends React.Component {
@@ -15,35 +15,27 @@ class ModalView extends React.Component {
     super(props);
     this.state = {
       open: false,
-      assigneeName: null,
+      assigneeName:'',
       photo: null,
-      date: null,
-      time:null,
-      description:null,
+      date: '',
+      time:'',
+      description:'',
       localId:null
     };
-    // this.submitForm = this.submitForm.bind(this);
+ 
   }
   handleClose() {
     this.props.close();
   }
-
   
   handleSave() {
-const token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg0MjYyNTEsIm5iZiI6MTU4ODQyNjI1MSwianRpIjoiY2M4ODYxMDEtOWY3OC00NzNjLTgwODctOTRkMGQwNGNmOTkyIiwiaWRlbnRpdHkiOnsibmFtZSI6IlNhcmF2YW5hbiBUZXN0aW5nIiwiZW1haWwiOiJzcGljZWJsdWV0ZXN0MkBnbWFpbC5jb20iLCJ1c2VyX2lkIjoiNWU3ODgwZGE3ZWEyZjA5ZTgwM2U4NmY1IiwiaWNvbiI6IiJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.wcBIUDWWx4YcPEzjwykqMwv-kl-lop4v9nvPDJk-ArM';
-//  const body= {
-//       assigned_user:"5e7880dd7ea2f09e803e86fa",
-//       task_date:this.state.date,
-//       task_time:this.state.time,
-//       task_msg: this.state.description
-//     };
+const token ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg5NDYxMzUsIm5iZiI6MTU4ODk0NjEzNSwianRpIjoiNzYzODQwNDItN2Q4NS00OWZhLWJlOWEtMjUzZDZhOTVkN2Y5IiwiaWRlbnRpdHkiOnsibmFtZSI6IlN1YmkgUCIsImVtYWlsIjoic3ViaUBzdWJpLmxsIiwidXNlcl9pZCI6IjVlYjNjMzkwZDY5ZGFiMjgyMmQxNjU3OCIsImNvbXBhbnlfaWQiOiI1ZWIzYzM5MGQ2OWRhYjI4MjJkMTY1NzciLCJpY29uIjoiaHR0cHM6Ly93d3cuZ3JhdmF0YXIuY29tL2F2YXRhci9jNjY0MWU4Y2ZkYzQ2NzU0MDg1NGI0ZDAyOWZhYTJhYSJ9LCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.4TeJPYqxecbuAO8VXN_fF1gfbiTVVl3QtyZODz_8Ifk";
 
-
-    axios.post('https://stageapi.hellomail.io/task/5e7880dd7ea2f09e803e86fa',{
-   assigned_user:"5e7880dd7ea2f09e803e86fa",
-   task_date:"this.state.date",
-   task_time:"this.state.time",
-   task_msg: "this.state.description"
+    axios.post('https://stageapi.hellomail.io/task/5eb3c394d69dab2822d1657d',{
+      assigned_user:"5eb3c394d69dab2822d1657d",
+      task_date:this.state.date,
+      task_time:this.state.time,
+      task_msg: this.state.description
    }, {
     headers:{
       'Authorization':`Bearer ${token}`,
@@ -52,14 +44,13 @@ const token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg0MjYyNTEsIm5iZ
     }
   })
     .then(res => {
-      console.log(res.data,'222');
+      this.props.createData(res.data.results);
+      this.handleClose();
     })
     .catch(err => {
       console.log(err,'222');
     });
 
-    // this.props.setAddData(data);
-    this.handleClose();
   }
 
 
@@ -111,12 +102,7 @@ const token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg0MjYyNTEsIm5iZ
                   <MenuItem value={"6.00 pm"}>6.00 pm</MenuItem>
                 </Select>
                 </div>
-            {/* <input
-              ref={fileInput => (this.fileInput = fileInput)}
-              type="file"
-              className="uploadImage"
-              onChange={evt => this.uploadImage(evt)}
-            /> */}
+           
             <div className="mt-2">
               <Button
                 variant="outline-success"
@@ -141,7 +127,7 @@ const token ='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1ODg0MjYyNTEsIm5iZ
 }
 
 const mapDispatchToProps = dispatch => ({
-  setAddData: data => dispatch(setAddData(data))
+  createData: data => dispatch(createData(data))
 });
 
 export default connect(
