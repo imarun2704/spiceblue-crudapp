@@ -30,9 +30,9 @@ class ModalUpdateView extends React.Component {
       axios.put(`https://stageapi.hellomail.io/task/5eb3c394d69dab2822d1657d/${id}`,{
        
           assigned_user:"5eb3c394d69dab2822d1657d",
-          task_date:`${this.state.date}`,
-          task_time:`${this.state.time}`,
-          task_msg:`${this.state.description}`
+          task_date:this.state.date ? this.state.date : this.props.data.task_date,
+          task_time:this.state.time ? this.state.time : this.props.data.task_time,
+          task_msg:this.state.description ? this.state.description : this.props.data.task_msg
        
       },{
       headers:{
